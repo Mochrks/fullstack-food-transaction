@@ -1,14 +1,16 @@
-
 import './App.css'
-import { Button } from '@/components/ui/button'
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes';
+
 
 function App() {
-
 
   return (
     <>
       <div>
-        <Button>Test</Button>
+        <Router>
+          <AppRoutes />
+        </Router>
       </div>
     </>
   )
