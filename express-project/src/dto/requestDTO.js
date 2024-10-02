@@ -1,18 +1,21 @@
-// dto/customerRequestDTO.js
 const Customer = (data) => {
   const { name, phone, address } = data;
 
-  if (!name) {
-    throw new Error("Name is required");
-  }
+  return data;
+};
 
-  if (phone && phone.length < 9) {
-    throw new Error("Phone number is too short");
-  }
+const Food = (data) => {
+  const { food_name, price, stock } = data;
+  return data;
+};
 
+const Transaction = (data) => {
+  const { customer_id, food_id, qty, total_price, transaction_date } = data;
   return data;
 };
 
 module.exports = {
   Customer,
+  Food,
+  Transaction,
 };
