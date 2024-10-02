@@ -1,4 +1,4 @@
-const prisma = require("../prismaClient");
+const prisma = require("../config/prismaClient");
 
 const createFood = async (data) => {
   return await prisma.foods.create({ data });

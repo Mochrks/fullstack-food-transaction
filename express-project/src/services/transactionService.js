@@ -1,4 +1,4 @@
-const prisma = require("../prismaClient");
+const prisma = require("../config/prismaClient");
 
 const createTransaction = async (data) => {
   const food = await prisma.foods.findUnique({
