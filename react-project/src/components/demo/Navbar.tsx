@@ -3,6 +3,7 @@ import { AlignJustify, LogOut, Moon, Sun } from 'lucide-react'
 import { Switch } from '../ui/switch'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { useNavigate } from 'react-router-dom'
 
 interface NavbarProps {
     sidebarOpen: boolean;
@@ -12,9 +13,10 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }: NavbarProps) => {
+    const navigate = useNavigate();
     // logout
     const handleLogout = () => {
-        console.log("Logout requested")
+        navigate("/")
     }
     return (
         <div>
@@ -41,8 +43,8 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }: N
                                         <AvatarFallback>Mr</AvatarFallback>
                                     </Avatar>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onSelect={handleLogout}>
+                                <DropdownMenuContent align="end" className='cursor-pointer'>
+                                    <DropdownMenuItem onSelect={handleLogout} className='cursor-pointer'>
                                         <LogOut className="mr-2 h-4 w-4" />
                                         <span>Log out</span>
                                     </DropdownMenuItem>

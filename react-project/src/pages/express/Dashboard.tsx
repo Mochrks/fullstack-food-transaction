@@ -1,26 +1,28 @@
-'use client'
-
 import { useState, } from 'react'
 import { Sidebar } from '@/components/demo/Sidebar'
 import { Navbar } from '@/components/demo/Navbar'
 import { Overview } from '@/components/demo/Overview'
 import { Charts } from '@/components/demo/Charts'
-import { ConfirmDialog } from '@/components/demo/ConfirmDialog'
-
-
-
+import { SiExpress } from 'react-icons/si'
+import { useNavigate } from 'react-router-dom'
 
 export const Dashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
     const [darkMode, setDarkMode] = useState(false)
-    const [IsConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+    const navigate = useNavigate()
 
+    const handleNavigation = {
+        dashboard: () => navigate('/dashboard'),
+        customer: () => navigate('/customer'),
+        foods: () => navigate('/foods'),
+        transaction: () => navigate('/transaction'),
+    }
 
     return (
         <>
             <div className={`flex h-screen ${darkMode ? 'dark' : ''}`}>
                 {/* sidebar */}
-                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} name='Express Js' />
+                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} name='Express Js' icons={<SiExpress className='w-7 h-5' />} onNavigate={handleNavigation} />
 
                 <div className="flex-1 overflow-auto bg-gray-100 dark:bg-[#212121]">
 
@@ -40,10 +42,6 @@ export const Dashboard = () => {
                         </div>
                     </main>
                 </div>
-
-                {/* Confirm Dialog */}
-                <ConfirmDialog setIsConfirmModalOpen={setIsConfirmModalOpen} IsConfirmModalOpen={IsConfirmModalOpen} />
-
 
             </div>
         </>

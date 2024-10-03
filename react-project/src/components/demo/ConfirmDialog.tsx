@@ -5,9 +5,10 @@ import { Button } from '../ui/button'
 interface ConfirmDialogProps {
     IsConfirmModalOpen: boolean,
     setIsConfirmModalOpen: (open: boolean) => void;
+    handleActionDelete?: () => void
 }
 
-export const ConfirmDialog = ({ IsConfirmModalOpen, setIsConfirmModalOpen }: ConfirmDialogProps) => {
+export const ConfirmDialog = ({ IsConfirmModalOpen, setIsConfirmModalOpen, handleActionDelete }: ConfirmDialogProps) => {
     return (
         <div>
             <Dialog open={IsConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
@@ -20,8 +21,8 @@ export const ConfirmDialog = ({ IsConfirmModalOpen, setIsConfirmModalOpen }: Con
                     </DialogHeader>
 
                     <DialogFooter className='flex gap-3 md:gap-1'>
-                        <Button type="submit">Delete</Button>
-                        <Button variant="outline" >Cancel</Button>
+                        <Button type="submit" onClick={() => handleActionDelete && handleActionDelete()}>Delete</Button>
+                        <Button variant="outline" onClick={() => setIsConfirmModalOpen(false)}>Cancel</Button>
                     </DialogFooter>
 
                 </DialogContent>

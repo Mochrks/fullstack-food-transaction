@@ -1,81 +1,85 @@
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog'
-import { Button } from '../ui/button'
-
-interface ConfirmDialogProps {
-    IsDialogModalOpen: boolean,
-    nameAction: string;
-    setIsDialogModalOpen: (open: boolean) => void;
+interface FormField {
+    id: string
+    label: string
+    type: 'text' | 'number' | 'email' | 'password ' | 'date'
 }
 
-export const DialogModal = ({ IsDialogModalOpen, setIsDialogModalOpen, nameAction }: ConfirmDialogProps) => {
-    const [name, setName] = useState("");
-    const [address, setAddress] = useState("");
-    const [phone, setPhone] = useState("");
+interface DialogModalProps {
+    isOpen: boolean
+    onOpenChange: (open: boolean) => void
+    title: string
+    description: string
+    fields: FormField[]
+    onSubmit: (formData: Record<string, string>) => void
+    submitButtonText: string
+    initialData?: Record<string, string>
+}
 
-    const handleSubmit = () => {
-        console.log("test", name, address, phone);
+export const DialogModal = ({
+    isOpen,
+    onOpenChange,
+    title,
+    description,
+    fields,
+    onSubmit,
+    submitButtonText,
+    initialData = {}
+}: DialogModalProps) => {
+    const [formData, setFormData] = useState<Record<string, string>>(initialData)
+
+    useEffect(() => {
+        if (isOpen) {
+            setFormData(initialData)
+        } else {
+            setFormData({})
+        }
+    }, [isOpen, initialData])
+
+    const handleInputChange = (id: string, value: string) => {
+        setFormData(prev => ({ ...prev, [id]: value }))
+    }
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        onSubmit(formData)
     }
 
     return (
-        <div>
-            <Dialog open={IsDialogModalOpen} onOpenChange={setIsDialogModalOpen}>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle>{nameAction}</DialogTitle>
-                        <DialogDescription>
-                            Fill out the form below to seamlessly {nameAction} into the database
-                        </DialogDescription>
-                    </DialogHeader>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
+                </DialogHeader>
 
-                    <form onSubmit={handleSubmit}>
-                        <div className="grid gap-4 py-10">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-start">
-                                    Name
+                <form onSubmit={handleSubmit}>
+                    <div className="grid gap-4 py-4">
+                        {fields.map((field) => (
+                            <div key={field.id} className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor={field.id} className="text-left">
+                                    {field.label}
                                 </Label>
                                 <Input
-                                    id="name"
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    id={field.id}
+                                    type={field.type}
+                                    value={formData[field.id] || ''}
+                                    onChange={(e) => handleInputChange(field.id, e.target.value)}
                                     className="col-span-3"
                                 />
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="address" className="text-start">
-                                    Address
-                                </Label>
-                                <Input
-                                    id="address"
-                                    type="text"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    className="col-span-3"
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="address" className="text-start">
-                                    Phone
-                                </Label>
-                                <Input
-                                    id="address"
-                                    type="number"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className="col-span-3"
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit" className='w-full'>Add Data</Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
-        </div>
-    );
+                        ))}
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit" className="w-full">{submitButtonText}</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
 }

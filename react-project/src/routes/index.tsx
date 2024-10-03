@@ -7,10 +7,11 @@ import { Customer } from '@/pages/express/Customer';
 import { Dashboard } from '@/pages/express/Dashboard';
 import { Food } from '@/pages/express/Food';
 import { Transaction } from '@/pages/express/Transaction';
-import { CustomerNest } from '@/pages/nest/Customer';
+
 import { DashboardNest } from '@/pages/nest/Dashboard';
 import { FoodNest } from '@/pages/nest/Food';
 import { TransactionNest } from '@/pages/nest/Transaction';
+import { CustomerNest } from '@/pages/nest/Customer';
 
 
 const AppRoutes: React.FC = () => {
