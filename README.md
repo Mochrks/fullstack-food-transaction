@@ -1,23 +1,15 @@
 
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-  }
-  .title {
-    font-size: 2em;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-</style>
+<h1 align="center" style="font-family: 'Poppins', sans-serif; font-size: 2.5em; font-weight: bold;">Fullstack Food Transaction Application </h1>
 
-<h2 class="title">Fullstack Food Transaction Application!</h2>
+<p align="center" style="font-family: 'Poppins', sans-serif; font-size: 1.5em;">
+  A complete fullstack application to manage CRUD API customer, food ,transactions using  technologies.
+</p>
+
 
 <p align="center">
-  <video src="./react-project/src/assets/intro/intro.mp4" width="700" controls autoplay loop muted>
-    Your browser does not support the video tag.
-  </video>
+  <img src="../react-project/src/assets/intro/intro.gif" width="700" alt="Demo GIF" />
 </p>
+
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=react,vite,express,nestjs,ts,tailwind" alt="Tech Stack Icons" />
@@ -56,7 +48,7 @@ fullstack-food-transaction/
 
 - **Clone the repository**
     ```bash
-    git clone https://github.com/your-username/fullstack-food-transaction.git
+    git clone https://github.com/mochrks/fullstack-food-transaction.git
     cd fullstack-food-transaction/express-project
     ```
 
