@@ -1,33 +1,59 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getCustomersExpress } from '@/services/customerService';
+import { getFoodExpress } from '@/services/foodService';
+import { getTransactionExpress } from '@/services/transactionService';
+import { useEffect, useState } from 'react';
 
-
-const monthlyData = [
-    { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Feb', uv: 3000, pv: 1398, amt: 2210 },
-    { name: 'Mar', uv: 2000, pv: 9800, amt: 2290 },
-    { name: 'Apr', uv: 2780, pv: 3908, amt: 2000 },
-    { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
-    { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
-]
 export const Charts = () => {
+
+    const [chartData, setChartData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch data dari  API
+                const [customers, foods, transactions] = await Promise.all([
+                    getCustomersExpress(),
+                    getFoodExpress(),
+                    getTransactionExpress(),
+                ]);
+
+                const formattedData = [
+                    {
+                        data: 'Data',
+                        customer: customers.totalData,
+                        foods: foods.totalData,
+                        transaction: transactions.totalData,
+                    }
+                ];
+
+                setChartData(formattedData);
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        };
+
+        fetchData();
+    }, []);
     return (
         <div>
             <div className="mb-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Monthly Performance</CardTitle>
+                        <CardTitle>Statistics</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={monthlyData}>
+                            <BarChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
+                                <XAxis dataKey="data" />
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey="pv" fill="#8884d8" />
-                                <Bar dataKey="uv" fill="#82ca9d" />
+                                <Bar dataKey="customer" fill="#8884d8" />
+                                <Bar dataKey="foods" fill="#82ca9d" />
+                                <Bar dataKey="transaction" fill="#A14ED4" />
                             </BarChart>
                         </ResponsiveContainer>
                     </CardContent>

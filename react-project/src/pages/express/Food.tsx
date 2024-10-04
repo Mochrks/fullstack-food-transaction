@@ -17,14 +17,20 @@ interface Food {
     stock: number;
 }
 
-
 export const Food = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
     const [darkMode, setDarkMode] = useState(false)
     const [IsConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
     const [IsDialogModalOpen, setIsDialogModalOpen] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [alertMessage, setAlertMessage] = useState<string | null>(null)
+    const [alertMessage, setAlertMessage] = useState<{ message: string, type: string } | null>(null)
+
+    const showAlert = (message: string, type: 'success' | 'error') => {
+        setAlertMessage({ message, type })
+        setTimeout(() => {
+            setAlertMessage(null)
+        }, 2000)
+    }
     // get select data foodId
     const [selectedFoodId, setSelectedFoodId] = useState<number>(0)
     const [foodData, setFoodData] = useState<Food[]>([])
@@ -70,6 +76,16 @@ export const Food = () => {
         }
     ]
 
+    useEffect(() => {
+        const storedDarkMode = localStorage.getItem('darkMode');
+        if (storedDarkMode) {
+            setDarkMode(JSON.parse(storedDarkMode));
+        }
+    }, []);
+    const handleSetDarkMode = (mode: boolean) => {
+        setDarkMode(mode);
+        localStorage.setItem('darkMode', JSON.stringify(mode));
+    };
 
     useEffect(() => {
         fetchFood()
@@ -84,7 +100,7 @@ export const Food = () => {
                 setFoodData(response.data as Food[])
             }
         } catch (error) {
-            setAlertMessage('Failed to fetch food')
+            showAlert('Failed to fetch foods', 'error')
         } finally {
             setLoading(false)
         }
@@ -110,16 +126,18 @@ export const Food = () => {
                 console.log("Food Update success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingFood(null)
+                showAlert('Foods update successfully', 'success')
                 fetchFood()
             } else {
                 console.log("Food Create success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingFood(null)
+                showAlert('Foods create successfully', 'success')
                 fetchFood()
             }
         } catch (error) {
             console.error(`Error Food:`, error)
-            setAlertMessage(`Failed Error. Please try again.`)
+            showAlert('Failed Error. Please try again.', 'error')
         }
     }
 
@@ -130,11 +148,12 @@ export const Food = () => {
             if (response.statusCode === 200) {
                 console.log('Food deleted successfully:', response.data)
                 setIsConfirmModalOpen(false)
+                showAlert('Food delete successfully', 'success')
                 fetchFood()
             }
         } catch (error) {
             console.error('Error deleting Food:', error)
-            setAlertMessage('Failed to delete Food. Please try again.')
+            showAlert('Failed to delete food. Please try again.', 'error')
         }
     }
 
@@ -150,7 +169,7 @@ export const Food = () => {
                     <Navbar
                         sidebarOpen={sidebarOpen}
                         setSidebarOpen={setSidebarOpen}
-                        setDarkMode={setDarkMode}
+                        setDarkMode={handleSetDarkMode}
                         darkMode={darkMode}
                     />
                     <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 md:pt-20">
@@ -195,7 +214,8 @@ export const Food = () => {
 
                 {alertMessage && (
                     <Alert
-                        message={alertMessage}
+                        message={alertMessage.message}
+                        type={alertMessage.type}
                         onClose={() => setAlertMessage(null)}
                     />
                 )}

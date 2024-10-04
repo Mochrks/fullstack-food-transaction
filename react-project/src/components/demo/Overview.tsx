@@ -1,6 +1,38 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { UsersRound, Utensils, Captions } from 'lucide-react';
+
+import { getCustomersExpress } from '@/services/customerService';
+import { getFoodExpress } from '@/services/foodService';
+import { getTransactionExpress } from '@/services/transactionService';
+import { useEffect, useState } from 'react';
+
 export const Overview = () => {
+    const [customerCount, setCustomerCount] = useState(0);
+    const [foodCount, setFoodCount] = useState(0);
+    const [transactionCount, setTransactionCount] = useState(0);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                const [customers, foods, transactions] = await Promise.all([
+                    getCustomersExpress(),
+                    getFoodExpress(),
+                    getTransactionExpress(),
+                ]);
+
+                setCustomerCount(customers.totalData);
+                setFoodCount(foods.totalData);
+                setTransactionCount(transactions.totalData);
+            } catch (error) {
+                console.error('Error fetching overview data', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div>
             <h1 className="text-3xl font-semibold mb-6 dark:text-white">Dashboard Overview</h1>
@@ -11,8 +43,8 @@ export const Overview = () => {
                         <UsersRound className='w-5 h-5 ' />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">$45,231.89</div>
-                        <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+                        <div className="text-2xl font-bold">{customerCount}</div>
+
                     </CardContent>
                 </Card>
                 <Card>
@@ -21,8 +53,8 @@ export const Overview = () => {
                         <Utensils className='w-5 h-5 ' />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">+2350</div>
-                        <p className="text-xs text-muted-foreground">+180.1% from last month</p>
+                        <div className="text-2xl font-bold">{foodCount}</div>
+
                     </CardContent>
                 </Card>
                 <Card>
@@ -31,8 +63,8 @@ export const Overview = () => {
                         <Captions className='w-5 h-5 ' />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">+12,234</div>
-                        <p className="text-xs text-muted-foreground">+19% from last month</p>
+                        <div className="text-2xl font-bold">{transactionCount}</div>
+
                     </CardContent>
                 </Card>
 

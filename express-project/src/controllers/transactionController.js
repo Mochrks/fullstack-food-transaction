@@ -20,10 +20,16 @@ const createTransaction = async (req, res) => {
 const getAllTransactions = async (req, res) => {
   try {
     const transactions = await transactionService.getAllTransactions();
+    const totalData = transactions.length;
     res
       .status(200)
       .json(
-        successResponse(transactions, "Transaction retrieved successfully")
+        successResponse(
+          transactions,
+          "Transaction retrieved successfully",
+          200,
+          totalData
+        )
       );
   } catch (error) {
     res.status(500).json(errorResponse(error.message));

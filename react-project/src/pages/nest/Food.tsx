@@ -25,7 +25,14 @@ export const FoodNest = () => {
     const [IsDialogModalOpen, setIsDialogModalOpen] = useState(false)
 
     const [loading, setLoading] = useState(true)
-    const [alertMessage, setAlertMessage] = useState<string | null>(null)
+    const [alertMessage, setAlertMessage] = useState<{ message: string, type: string } | null>(null)
+
+    const showAlert = (message: string, type: 'success' | 'error') => {
+        setAlertMessage({ message, type })
+        setTimeout(() => {
+            setAlertMessage(null)
+        }, 2000)
+    }
     // get select data foodId
     const [selectedFoodId, setSelectedFoodId] = useState<number>(0)
 
@@ -90,7 +97,7 @@ export const FoodNest = () => {
                 setFoodData(response.data as Food[])
             }
         } catch (error) {
-            setAlertMessage('Failed to fetch food')
+            showAlert('Failed to fetch foods', 'error')
         } finally {
             setLoading(false)
         }
@@ -116,16 +123,18 @@ export const FoodNest = () => {
                 console.log("Food Update success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingFood(null)
+                showAlert('Foods update successfully', 'success')
                 fetchFood()
             } else {
                 console.log("Food Create success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingFood(null)
+                showAlert('Foods create successfully', 'success')
                 fetchFood()
             }
         } catch (error) {
             console.error(`Error Food:`, error)
-            setAlertMessage(`Failed Error. Please try again.`)
+            showAlert('Failed Error. Please try again.', 'error')
         }
     }
 
@@ -136,11 +145,12 @@ export const FoodNest = () => {
             if (response.statusCode === 200) {
                 console.log('Food deleted successfully:', response.data)
                 setIsConfirmModalOpen(false)
+                showAlert('Food delete successfully', 'success')
                 fetchFood()
             }
         } catch (error) {
             console.error('Error deleting Food:', error)
-            setAlertMessage('Failed to delete Food. Please try again.')
+            showAlert('Failed to delete food. Please try again.', 'error')
         }
     }
 
@@ -201,7 +211,8 @@ export const FoodNest = () => {
 
                 {alertMessage && (
                     <Alert
-                        message={alertMessage}
+                        message={alertMessage.message}
+                        type={alertMessage.type}
                         onClose={() => setAlertMessage(null)}
                     />
                 )}

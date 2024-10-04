@@ -35,7 +35,7 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen, name, icons, onNavigate }
     return (
         <div>
             {/* Sidebar drawer */}
-            <div className={`bg-white dark:bg-[#171717] dark:text-white w-64 h-full flex-shrink-0 ${sidebarOpen ? '' : 'hidden'} transition-all duration-20 ease-out`}>
+            <div className={`bg-white dark:bg-[#171717] dark:text-white w-64 h-full flex-shrink-0 ${sidebarOpen ? '' : 'hidden'} `}>
                 <div className="p-4">
                     <div className="flex flex-row  text-start  mb-10 ">
                         <div>

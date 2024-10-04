@@ -17,9 +17,12 @@ const createFood = async (req, res) => {
 const getAllFoods = async (req, res) => {
   try {
     const foods = await foodService.getAllFoods();
+    const totalData = foods.length;
     res
       .status(200)
-      .json(successResponse(foods, "Foods retrieved successfully"));
+      .json(
+        successResponse(foods, "Foods retrieved successfully", 200, totalData)
+      );
   } catch (error) {
     res.status(500).json(errorResponse(error.message));
   }

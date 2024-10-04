@@ -1,4 +1,4 @@
-import { useState, } from 'react'
+import { useEffect, useState, } from 'react'
 import { Sidebar } from '@/components/demo/Sidebar'
 import { Navbar } from '@/components/demo/Navbar'
 import { Overview } from '@/components/demo/Overview'
@@ -11,6 +11,17 @@ export const Dashboard = () => {
     const [darkMode, setDarkMode] = useState(false)
     const navigate = useNavigate()
 
+    useEffect(() => {
+        const storedDarkMode = localStorage.getItem('darkMode');
+        if (storedDarkMode) {
+            setDarkMode(JSON.parse(storedDarkMode));
+        }
+    }, []);
+    const handleSetDarkMode = (mode: boolean) => {
+        setDarkMode(mode);
+        localStorage.setItem('darkMode', JSON.stringify(mode));
+    };
+
     const handleNavigation = {
         dashboard: () => navigate('/dashboard'),
         customer: () => navigate('/customer'),
@@ -22,7 +33,7 @@ export const Dashboard = () => {
         <>
             <div className={`flex h-screen ${darkMode ? 'dark' : ''}`}>
                 {/* sidebar */}
-                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} name='Express Js' icons={<SiExpress className='w-7 h-5' />} onNavigate={handleNavigation} />
+                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} name='Express Js' icons={<SiExpress className='w-7 h-7' />} onNavigate={handleNavigation} />
 
                 <div className="flex-1 overflow-auto bg-gray-100 dark:bg-[#212121]">
 
@@ -30,7 +41,7 @@ export const Dashboard = () => {
                     <Navbar
                         sidebarOpen={sidebarOpen}
                         setSidebarOpen={setSidebarOpen}
-                        setDarkMode={setDarkMode}
+                        setDarkMode={handleSetDarkMode}
                         darkMode={darkMode}
                     />
                     <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 md:pt-20">

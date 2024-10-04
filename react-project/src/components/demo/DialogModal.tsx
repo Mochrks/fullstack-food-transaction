@@ -19,6 +19,7 @@ interface DialogModalProps {
     onSubmit: (formData: Record<string, string>) => void
     submitButtonText: string
     initialData?: Record<string, string>
+    render?: (value: any, row: any) => React.ReactNode
 }
 
 export const DialogModal = ({

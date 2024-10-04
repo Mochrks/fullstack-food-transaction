@@ -40,8 +40,14 @@ export const TransactionNest = () => {
     const [IsDialogModalOpen, setIsDialogModalOpen] = useState(false)
 
     const [loading, setLoading] = useState(true)
-    const [alertMessage, setAlertMessage] = useState<string | null>(null)
+    const [alertMessage, setAlertMessage] = useState<{ message: string, type: string } | null>(null)
 
+    const showAlert = (message: string, type: 'success' | 'error') => {
+        setAlertMessage({ message, type })
+        setTimeout(() => {
+            setAlertMessage(null)
+        }, 2000)
+    }
 
     // get select data transactionId
     const [selectedTransactionId, setSelectedTransactionId] = useState<number>(0)
@@ -124,7 +130,7 @@ export const TransactionNest = () => {
                 setTransactionData(response.data as Transaction[])
             }
         } catch (error) {
-            setAlertMessage('Failed to fetch food')
+            showAlert('Failed to fetch transaction', 'error')
         } finally {
             setLoading(false)
         }
@@ -150,16 +156,18 @@ export const TransactionNest = () => {
                 console.log("Transaction Update success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingTransaction(null)
+                showAlert('Transaction update successfully', 'success')
                 fetchTransaction()
             } else {
                 console.log("Transaction Create success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingTransaction(null)
+                showAlert('Transaction Create successfully', 'success')
                 fetchTransaction()
             }
         } catch (error) {
             console.error(`Error Transaction:`, error)
-            setAlertMessage(`Failed Error. Please try again.`)
+            showAlert('Failed Error. Please try again.', 'error')
         }
     }
 
@@ -170,11 +178,12 @@ export const TransactionNest = () => {
             if (response.statusCode === 200) {
                 console.log('Transaction deleted successfully:', response.data)
                 setIsConfirmModalOpen(false)
+                showAlert('Transaction delete successfully', 'success')
                 fetchTransaction()
             }
         } catch (error) {
             console.error('Error deleting Transaction:', error)
-            setAlertMessage('Failed to delete Transaction. Please try again.')
+            showAlert('Failed to delete transactions. Please try again.', 'error')
         }
     }
 
@@ -235,7 +244,8 @@ export const TransactionNest = () => {
 
                 {alertMessage && (
                     <Alert
-                        message={alertMessage}
+                        message={alertMessage.message}
+                        type={alertMessage.type}
                         onClose={() => setAlertMessage(null)}
                     />
                 )}

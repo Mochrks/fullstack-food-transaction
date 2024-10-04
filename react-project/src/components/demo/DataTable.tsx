@@ -148,10 +148,22 @@ export const DataTable = ({ tableName, columns, data, actions, onAddNew }: DataT
                                         </div>
                                     </TableCell>
                                 )}
+
+
                             </TableRow>
                         ))}
+
+
+
                     </TableBody>
+
                 </Table>
+
+                {currentItems.length === 0 && (
+                    <>
+                        <div className='w-full flex items-start justify-center px-10 py-10'>Data kosong</div>
+                    </>
+                )}
 
                 <div className="flex justify-between items-center mt-4">
                     <div>

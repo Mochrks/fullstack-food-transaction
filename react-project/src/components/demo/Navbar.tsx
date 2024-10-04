@@ -20,7 +20,7 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen, darkMode, setDarkMode }: N
     }
     return (
         <div>
-            <header className="  dark:bg-[#171717] shadow-sm transition-all duration-200 ease-in-">
+            <header className="  dark:bg-[#171717] shadow-sm ">
                 <nav className='flex flex-row '>
                     <div className='flex  text-center items-center px-2  space-x-2'>
                         <Button variant="ghost" onClick={() => setSidebarOpen(!sidebarOpen)} className='rounded-full dark:hover:bg-gray-700'>

@@ -6,6 +6,7 @@ const createCustomer = async (req, res) => {
   try {
     const validatedData = Customer(req.body);
     const customer = await customerService.createCustomer(validatedData);
+
     res
       .status(201)
       .json(successResponse(customer, "Customer created successfully", 201));
@@ -17,9 +18,17 @@ const createCustomer = async (req, res) => {
 const getAllCustomers = async (req, res) => {
   try {
     const customers = await customerService.getAllCustomers();
+    const totalCustomers = customers.length;
     res
       .status(200)
-      .json(successResponse(customers, "Customers retrieved successfully"));
+      .json(
+        successResponse(
+          customers,
+          "Customers retrieved successfully",
+          200,
+          totalCustomers
+        )
+      );
   } catch (error) {
     res.status(500).json(errorResponse(error.message));
   }

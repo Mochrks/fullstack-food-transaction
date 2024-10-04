@@ -22,7 +22,14 @@ export const CustomerNest = () => {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
     const [isDialogModalOpen, setIsDialogModalOpen] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [alertMessage, setAlertMessage] = useState<string | null>(null)
+    const [alertMessage, setAlertMessage] = useState<{ message: string, type: string } | null>(null)
+
+    const showAlert = (message: string, type: 'success' | 'error') => {
+        setAlertMessage({ message, type })
+        setTimeout(() => {
+            setAlertMessage(null)
+        }, 2000)
+    }
 
     // get select data customerId
     const [selectedCustomerId, setSelectedCustomerId] = useState<number>(0)
@@ -85,7 +92,7 @@ export const CustomerNest = () => {
                 setCustomerData(response.data as Customer[])
             }
         } catch (error) {
-            setAlertMessage('Failed to fetch customers')
+            showAlert('Failed to fetch customers', 'error')
         } finally {
             setLoading(false)
         }
@@ -110,16 +117,18 @@ export const CustomerNest = () => {
                 console.log("Customer Update success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingCustomer(null)
+                showAlert('Customers update successfully', 'success')
                 fetchCustomers()
             } else {
                 console.log("Customer Create success", response.data)
                 setIsDialogModalOpen(false)
                 setEditingCustomer(null)
+                showAlert('Customers Create successfully', 'success')
                 fetchCustomers()
             }
         } catch (error) {
             console.error(`Error customer:`, error)
-            setAlertMessage(`Failed Error. Please try again.`)
+            showAlert('Failed Error. Please try again.', 'error')
         }
     }
 
@@ -130,11 +139,12 @@ export const CustomerNest = () => {
             if (response.statusCode === 200) {
                 console.log('Customer deleted successfully:', response.data)
                 setIsConfirmModalOpen(false)
+                showAlert('Customers delete successfully', 'success')
                 fetchCustomers()
             }
         } catch (error) {
             console.error('Error deleting customer:', error)
-            setAlertMessage('Failed to delete customer. Please try again.')
+            showAlert('Failed to delete customer. Please try again.', 'error')
         }
     }
 
@@ -189,7 +199,8 @@ export const CustomerNest = () => {
 
                 {alertMessage && (
                     <Alert
-                        message={alertMessage}
+                        message={alertMessage.message}
+                        type={alertMessage.type}
                         onClose={() => setAlertMessage(null)}
                     />
                 )}

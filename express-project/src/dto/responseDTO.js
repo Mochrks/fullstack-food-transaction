@@ -1,5 +1,11 @@
-const successResponse = (data, message = "Success", statusCode = 200) => {
+const successResponse = (
+  data,
+  message = "Success",
+  statusCode = 200,
+  totalData = 1
+) => {
   return {
+    totalData,
     data,
     status: "success",
     statusCode,
