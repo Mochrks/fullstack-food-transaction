@@ -3,11 +3,13 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface FormField {
     id: string
     label: string
-    type: 'text' | 'number' | 'email' | 'password ' | 'date'
+    type: 'text' | 'number' | 'email' | 'password' | 'date' | 'select'
+    options?: { value: string; label: string }[]
 }
 
 interface DialogModalProps {
@@ -19,7 +21,6 @@ interface DialogModalProps {
     onSubmit: (formData: Record<string, string>) => void
     submitButtonText: string
     initialData?: Record<string, string>
-    render?: (value: any, row: any) => React.ReactNode
 }
 
 export const DialogModal = ({
@@ -66,13 +67,31 @@ export const DialogModal = ({
                                 <Label htmlFor={field.id} className="text-left">
                                     {field.label}
                                 </Label>
-                                <Input
-                                    id={field.id}
-                                    type={field.type}
-                                    value={formData[field.id] || ''}
-                                    onChange={(e) => handleInputChange(field.id, e.target.value)}
-                                    className="col-span-3"
-                                />
+                                {field.type === 'select' ? (
+                                    <Select
+                                        onValueChange={(value) => handleInputChange(field.id, value)}
+                                        defaultValue={formData[field.id] || ''}
+                                    >
+                                        <SelectTrigger className="col-span-3">
+                                            <SelectValue placeholder={`Select ${field.label}`} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {field.options?.map((option) => (
+                                                <SelectItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                ) : (
+                                    <Input
+                                        id={field.id}
+                                        type={field.type}
+                                        value={formData[field.id] || ''}
+                                        onChange={(e) => handleInputChange(field.id, e.target.value)}
+                                        className="col-span-3"
+                                    />
+                                )}
                             </div>
                         ))}
                     </div>
