@@ -11,6 +11,8 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { SiNestjs } from 'react-icons/si'
 import { useNavigate } from 'react-router-dom'
+import { getCustomersNest } from '@/services/customerService'
+import { getFoodNest } from '@/services/foodService'
 
 interface Transaction {
     transaction_id: number
@@ -49,6 +51,8 @@ export const TransactionNest = () => {
         }, 2000)
     }
 
+    const [customers, setCustomers] = useState<{ customer_id: number; name: string }[]>([])
+    const [foods, setFoods] = useState<{ food_id: number; food_name: string }[]>([])
     // get select data transactionId
     const [selectedTransactionId, setSelectedTransactionId] = useState<number>(0)
 
@@ -67,13 +71,21 @@ export const TransactionNest = () => {
 
     // input form data
     const fields = [
-        { id: 'customer_id', label: 'Customer Id', type: 'number' as const },
-        { id: 'food_id', label: 'Food Id', type: 'number' as const },
+        {
+            id: 'customer_id',
+            label: 'Customer',
+            type: 'select' as const,
+            options: customers.map(c => ({ value: c.customer_id.toString(), label: c.name }))
+        },
+        {
+            id: 'food_id',
+            label: 'Food',
+            type: 'select' as const,
+            options: foods.map(f => ({ value: f.food_id.toString(), label: f.food_name }))
+        },
         { id: 'qty', label: 'Qty', type: 'number' as const },
-        // { id: 'total_price', label: 'Total Price', type: 'number' as const },
         { id: 'date', label: 'Date', type: 'date' as const },
     ]
-
     // coloum table
     const columns = [
         {
@@ -119,7 +131,32 @@ export const TransactionNest = () => {
 
     useEffect(() => {
         fetchTransaction()
+        fetchCustomers()
+        fetchFoods()
     }, [])
+
+
+    const fetchCustomers = async () => {
+        try {
+            const response = await getCustomersNest()
+            if (response.statusCode === 200) {
+                setCustomers(response.data)
+            }
+        } catch (error) {
+            console.error('Error fetching customers:', error)
+        }
+    }
+
+    const fetchFoods = async () => {
+        try {
+            const response = await getFoodNest()
+            if (response.statusCode === 200) {
+                setFoods(response.data)
+            }
+        } catch (error) {
+            console.error('Error fetching foods:', error)
+        }
+    }
 
     // get data
     const fetchTransaction = async () => {
@@ -239,7 +276,12 @@ export const TransactionNest = () => {
                     fields={fields}
                     onSubmit={handleSubmit}
                     submitButtonText={editingTransaction ? "Update Transaction" : "Add Transaction"}
-                    initialData={editingTransaction || {}}
+                    initialData={editingTransaction ? {
+                        customer_id: editingTransaction.customer_id.toString(),
+                        food_id: editingTransaction.food_id.toString(),
+                        qty: editingTransaction.qty.toString(),
+                        date: editingTransaction.transaction_date
+                    } : {}}
                 />
 
                 {alertMessage && (
